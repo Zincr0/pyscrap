@@ -1,6 +1,6 @@
 Framework “pyscrap”
 
-Para casos más complejos se usa el framework “pyscrap”, inspirado en “scrapy”; uno de los frameworks de webscraping más avanzados existentes a la fecha, pero más simple y ajustado a necesidades específicas, a saber:
+Inspirado en “scrapy”; uno de los frameworks de webscraping más avanzados existentes a la fecha, pero más simple y ajustado a necesidades específicas, a saber:
 *Scripts de extracción instalables como paquetes
 **Compatible entre sistemas basados en unix
 *Módulos ejecutables
