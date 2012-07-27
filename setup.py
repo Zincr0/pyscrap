@@ -42,7 +42,7 @@ setup(
     classifiers=[
         "Development Status :: 4 - Beta",
         "Topic :: Software Development",
-        "License :: Apache 2.0 License",
+        "License :: Apache Software License",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python",
     ],
