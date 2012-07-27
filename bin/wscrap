@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+#Copyright 2012 Daniel Osvaldo Mondaca Seguel
+#
+#Licensed under the Apache License, Version 2.0 (the "License");
+#you may not use this file except in compliance with the License.
+#You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#See the License for the specific language governing permissions and
+#limitations under the License.
+import sys, os
+from pyscrap.templates import createSetup
+from pyscrap.templates import createManifest
+from pyscrap.templates import createGitIgnore
+from pyscrap.templates import createSettings
+from pyscrap.templates import createPipeline
+from pyscrap.templates import createItem
+from pyscrap.templates import createSpider
+
+
+nargs=len(sys.argv)
+if nargs==1:
+    print("Usage:")
+    print("wscrap create <project name>")
+elif nargs==2:
+    print("Usage:")
+    print("wscrap create <project name>")
+elif nargs==3 and sys.argv[1]=="create":
+    proyectName=sys.argv[2]
+    proyectPath=os.getcwd()+"/"+proyectName
+    spiderPath=proyectPath+"/"+proyectName+"/"
+    if not os.path.exists(proyectPath):
+        os.makedirs(proyectPath)
+        os.makedirs(proyectPath+"/"+proyectName)
+        s=open(proyectPath+"/"+"setup.py", "w")
+        s.write(createSetup(proyectName))
+        s.close()
+        r=open(proyectPath+"/"+"README.txt", "w")
+        r.close()
+        m=open(proyectPath+"/"+"MANIFEST.in", "w")
+        m.write(createManifest(proyectName))
+        m.close()
+        g=open(proyectPath+"/"+".gitignore", "w")
+        g.write(createGitIgnore())
+        g.close()
+        open(spiderPath+"__init__.py", "w").close()
+        
+        sp=open(spiderPath+"exampleSpider.py", "w")
+        sp.write(createSpider())
+        sp.close()
+        
+        se=open(spiderPath+"settings.py", "w")
+        se.write(createSettings())
+        se.close()
+        p=open(spiderPath+"pipeline.py", "w")
+        p.write(createPipeline())
+        p.close()
+        i=open(spiderPath+"item.py", "w")
+        i.write(createItem())
+        i.close()
+    else:
+        print("Directory '"+proyectName+"' already exists!")
+
+

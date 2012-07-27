@@ -1,0 +1,3 @@
+include README.txt
+recursive-include wscrap *.py
+graft bin
