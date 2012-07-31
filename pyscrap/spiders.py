@@ -104,7 +104,9 @@ def catchItem(f, theSpider=None):
         items=f(*args, **kwargs)
         if items is None:
             return items
-        if len(items) > 0:
+        if isinstance(items, Item):
+            processItem(items, args, theSpider)
+        elif len(items) > 0:
             if isinstance(items, ItemList):
                     processItemList(items, args, theSpider)
             else:
@@ -136,7 +138,7 @@ class metaSpider(type):
         nopipelines=False
         try:
             settings = __import__('settings', os.getcwd())
-            print("Using local settings.")
+            #print("Using local settings.")
         except:
             #import settings
             spiderpath=inspect.getfile(classDict['parse'])
@@ -149,7 +151,7 @@ class metaSpider(type):
                 nosettings=True
         try:
             pipeline = __import__('pipeline', os.getcwd())
-            print("Using local pipeline.")
+            #print("Using local pipeline.")
         except:
             #import pipeline
             spiderpath=inspect.getfile(classDict['parse'])
