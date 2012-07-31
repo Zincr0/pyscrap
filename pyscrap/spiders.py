@@ -147,7 +147,7 @@ class metaSpider(type):
                 theimport="from "+modulo+" import settings"
                 exec theimport
             except:
-                print("settings.py not found, ignoring")
+                #print("settings.py not found, ignoring")
                 nosettings=True
         try:
             pipeline = __import__('pipeline', os.getcwd())
@@ -160,7 +160,7 @@ class metaSpider(type):
                 theimport="from "+modulo+" import pipeline"
                 exec theimport
             except:
-                print("pipeline.py not found, ignoring")
+                #print("pipeline.py not found, ignoring")
                 nopipelines=True
         getUrls=None
         if not nopipelines:
