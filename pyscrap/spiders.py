@@ -133,33 +133,36 @@ class metaSpider(type):
         '__pipes__' según lo especificado en settings.py. También asigna el decorador
         catchitem a la función 'parse'."""
         if classname == "spider":
-            return type.__new__(meta, classname, bases, classDict)
+            return type.__init__(meta, classname, bases, classDict)
         nosettings=False
         nopipelines=False
         try:
             settings = __import__('settings', os.getcwd())
             #print("Using local settings.")
-        except:
+        except Exception, e:
             try:
                 #import settings
                 spiderpath=inspect.getfile(classDict['parse'])
                 modulo=spiderpath.split("/")[-2]
                 theimport="from "+modulo+" import settings"
                 exec theimport
-            except:
+            except Exception, e:
                 #print("settings.py not found, ignoring")
                 nosettings=True
         try:
             pipeline = __import__('pipeline', os.getcwd())
             #print("Using local pipeline.")
-        except:
+        except Exception, e:
             #import pipeline
+            #print(e)
             try:
                 spiderpath=inspect.getfile(classDict['parse'])
+                print(spiderpath)
                 modulo=spiderpath.split("/")[-2]
                 theimport="from "+modulo+" import pipeline"
                 exec theimport
-            except:
+            except Exception, e:
+                #print(e)
                 #print("pipeline.py not found, ignoring")
                 nopipelines=True
         getUrls=None
