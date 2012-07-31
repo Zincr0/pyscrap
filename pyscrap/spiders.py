@@ -162,7 +162,9 @@ class metaSpider(type):
             except:
                 print("pipeline.py not found, ignoring")
                 nopipelines=True
-        getUrls=getattr(pipeline, "getUrls", None)
+        getUrls=None
+        if not nopipelines:
+            getUrls=getattr(pipeline, "getUrls", None)
         if getUrls is None:
             getUrls=lambda: []
         getUrls=rmSelf(getUrls)
