@@ -133,7 +133,7 @@ class metaSpider(type):
         '__pipes__' según lo especificado en settings.py. También asigna el decorador
         catchitem a la función 'parse'."""
         if classname == "spider":
-            return type.__init__(meta, classname, bases, classDict)
+            return type.__new__(meta, classname, bases, classDict)
         nosettings=False
         nopipelines=False
         try:
