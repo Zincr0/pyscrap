@@ -140,11 +140,11 @@ class metaSpider(type):
             settings = __import__('settings', os.getcwd())
             #print("Using local settings.")
         except:
-            #import settings
-            spiderpath=inspect.getfile(classDict['parse'])
-            modulo=spiderpath.split("/")[-2]
-            theimport="from "+modulo+" import settings"
             try:
+                #import settings
+                spiderpath=inspect.getfile(classDict['parse'])
+                modulo=spiderpath.split("/")[-2]
+                theimport="from "+modulo+" import settings"
                 exec theimport
             except:
                 print("settings.py not found, ignoring")
@@ -154,10 +154,10 @@ class metaSpider(type):
             #print("Using local pipeline.")
         except:
             #import pipeline
-            spiderpath=inspect.getfile(classDict['parse'])
-            modulo=spiderpath.split("/")[-2]
-            theimport="from "+modulo+" import pipeline"
             try:
+                spiderpath=inspect.getfile(classDict['parse'])
+                modulo=spiderpath.split("/")[-2]
+                theimport="from "+modulo+" import pipeline"
                 exec theimport
             except:
                 print("pipeline.py not found, ignoring")
