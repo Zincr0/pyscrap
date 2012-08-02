@@ -1,5 +1,17 @@
 Framework “pyscrap”
 
+Instalación (debian/ubuntu):
+
+sudo apt-get install libxml2-dev
+
+sudo apt-get install libxslt1-dev 
+
+sudo apt-get install python2.6-dev
+
+pip install pyscrap
+
+Características:
+
 Inspirado en “scrapy”; uno de los frameworks de webscraping más avanzados existentes a la fecha, pero más simple y ajustado a necesidades específicas, a saber:
 *Scripts de extracción instalables como paquetes
 **Compatible entre sistemas basados en unix
