@@ -24,16 +24,20 @@ import inspect
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+
 def getHtml(url):
     return getWeb(url, False)
-    
+
+
 def getXml(url):
     return getWeb(url, True)
-    
+
+
 def getJson(url):
-    site=urllib2.urlopen(url, timeout = 300)
+    site = urllib2.urlopen(url, timeout=300)
     return json.load(site)
-    
+
+
 def getWeb(url, isFeed):
     socket.setdefaulttimeout(300)
     loadedWeb = urllib2.build_opener()
@@ -44,45 +48,48 @@ def getWeb(url, isFeed):
         web=html.parse(  loadedWeb.open(url)  )
     return web
 
+
 def rmSelf(f):
     def new_f(*args, **kwargs):
-        newArgs=args[1:]
-        result=f(*newArgs, **kwargs)
+        newArgs = args[1:]
+        result = f(*newArgs, **kwargs)
         return result
     return new_f
+
 
 def processItem(item, theArgs, theSpider):
     if item.request is None:
         #print("is instance item "+str(item))
         if theSpider is None:
-            aSpider=theArgs[0]
+            aSpider = theArgs[0]
         else:
-            aSpider=theSpider
+            aSpider = theSpider
         if aSpider.__pipes__ is not None:
-            saveFunction=aSpider.__pipes__["items"].get(item.__class__.__name__)
+            saveFunction = aSpider.__pipes__["items"].get(item.__class__.__name__)
             if saveFunction is not None:
                 saveFunction(item)
             elif hasattr(aSpider, "__saveItem__"):
                 if aSpider.__saveItem__ is not None:
                     aSpider.__saveItem__(item)
     else:
-        function=item.request["callback"]
-        aracnid=function.__self__
-        url=item.request["url"]
-        function=catchItem(function, theSpider=aracnid)
+        function = item.request["callback"]
+        aracnid = function.__self__
+        url = item.request["url"]
+        function = catchItem(function, theSpider=aracnid)
         #print("ejecutando callback")
         if item.request["data"] is None:
             function(url)
         else:
             function(url, data=item.request["data"])
-            
+
+
 def processItemList(itemlist, theArgs, theSpider):
     if theSpider is None:
-        aSpider=theArgs[0]
+        aSpider = theArgs[0]
     else:
         aSpider=theSpider
     if aSpider.__pipes__ is not None:
-        saveFunction=aSpider.__pipes__["itemLists"].get(itemlist.__class__.__name__)
+        saveFunction = aSpider.__pipes__["itemLists"].get(itemlist.__class__.__name__)
         if saveFunction is not None:
             saveFunction(itemlist)
         else:
@@ -90,7 +97,7 @@ def processItemList(itemlist, theArgs, theSpider):
                 if isinstance(item, Item):
                     processItem(item, theArgs, theSpider)
                 elif isinstance(item, str):
-                    aSpider=theArgs[0]
+                    aSpider = theArgs[0]
                     aSpider.parse(url=item)
 
 
