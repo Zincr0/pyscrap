@@ -15,13 +15,15 @@
 import sys
 
 reload(sys)
-sys.setdefaultencoding('utf-8')
+sys.setdefaultencoding("utf-8")
+
 
 def spiderDefaultSave(item):
-    print("saving item: "+str(item))
+    print("saving item: " + str(item))
     for key, value in item.getDict().items():
-        print("default save for item with field: "+key)
-        print("and value: "+str(value))
+        print("default save for item with field: " + key)
+        print("and value: " + str(value))
+
 
 def customSave(item):
-    print("Custom save for item: "+str(item))
+    print("Custom save for item: " + str(item))

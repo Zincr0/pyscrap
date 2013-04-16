@@ -17,18 +17,20 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+
 def getHeaders():
-    headers=[('User-agent', 'Feedfetcher-pyscrap')]
+    headers = [("User-agent", "Feedfetcher-pyscrap")]
     return headers
 
+
 def getPipes():
-    pipes={ "spiders": 
-            {
-            "demoSpider": "spiderDefaultSave",
-            },
-        "items":
-            {
-            "customSaveItem": "customSave"
-            }
-        }
+    pipes = {"spiders":
+             {
+             "demoSpider": "spiderDefaultSave",
+             },
+             "items":
+             {
+             "customSaveItem": "customSave"
+             }
+             }
     return pipes

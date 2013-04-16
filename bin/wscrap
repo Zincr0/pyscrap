@@ -12,7 +12,8 @@
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #See the License for the specific language governing permissions and
 #limitations under the License.
-import sys, os
+import sys
+import os
 from pyscrap.templates import createSetup
 from pyscrap.templates import createManifest
 from pyscrap.templates import createGitIgnore
@@ -22,47 +23,48 @@ from pyscrap.templates import createItem
 from pyscrap.templates import createSpider
 
 
-nargs=len(sys.argv)
-if nargs==1:
+nargs = len(sys.argv)
+if nargs == 1:
+
     print("Usage:")
     print("wscrap create <project name>")
-elif nargs==2:
+
+elif nargs == 2:
     print("Usage:")
     print("wscrap create <project name>")
-elif nargs==3 and sys.argv[1]=="create":
-    proyectName=sys.argv[2]
-    proyectPath=os.getcwd()+"/"+proyectName
-    spiderPath=proyectPath+"/"+proyectName+"/"
+
+elif nargs == 3 and sys.argv[1] == "create":
+    proyectName = sys.argv[2]
+    proyectPath = os.getcwd() + "/" + proyectName
+    spiderPath = proyectPath + "/" + proyectName + "/"
     if not os.path.exists(proyectPath):
         os.makedirs(proyectPath)
         os.makedirs(proyectPath+"/"+proyectName)
-        s=open(proyectPath+"/"+"setup.py", "w")
+        s = open(proyectPath + "/" + "setup.py", "w")
         s.write(createSetup(proyectName))
         s.close()
-        r=open(proyectPath+"/"+"README.txt", "w")
+        r = open(proyectPath + "/" + "README.txt", "w")
         r.close()
-        m=open(proyectPath+"/"+"MANIFEST.in", "w")
+        m = open(proyectPath + "/" + "MANIFEST.in", "w")
         m.write(createManifest(proyectName))
         m.close()
-        g=open(proyectPath+"/"+".gitignore", "w")
+        g = open(proyectPath + "/" + ".gitignore", "w")
         g.write(createGitIgnore())
         g.close()
         open(spiderPath+"__init__.py", "w").close()
-        
-        sp=open(spiderPath+"exampleSpider.py", "w")
+
+        sp = open(spiderPath + "exampleSpider.py", "w")
         sp.write(createSpider())
         sp.close()
-        
-        se=open(spiderPath+"settings.py", "w")
+
+        se = open(spiderPath + "settings.py", "w")
         se.write(createSettings())
         se.close()
-        p=open(spiderPath+"pipeline.py", "w")
+        p = open(spiderPath + "pipeline.py", "w")
         p.write(createPipeline())
         p.close()
-        i=open(spiderPath+"item.py", "w")
+        i = open(spiderPath + "item.py", "w")
         i.write(createItem())
         i.close()
     else:
-        print("Directory '"+proyectName+"' already exists!")
-
-
+        print("Directory '" + proyectName + "' already exists!")

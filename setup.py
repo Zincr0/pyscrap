@@ -22,23 +22,24 @@ sys.setdefaultencoding('utf-8')
 
 files = ["pyscrap/*"]
 
+
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    scripts = ['bin/wscrap'],
-    name = "pyscrap",
-    version = "0.0.2",
-    author = "Daniel Mondaca",
-    author_email = "daniel@analitic.cl",
-    description = ("micro framework for web scraping"),
+    scripts=["bin/wscrap"],
+    name="pyscrap",
+    version="0.0.4",
+    author="Daniel Mondaca",
+    author_email="daniel@analitic.cl",
+    description=("micro framework for web scraping"),
     license = "Apache 2.0 License",
     keywords = "web scraping",
     url = "http://github.com/Nievous/pyscrap",
-    packages=['pyscrap'],
-    install_requires = ['lxml', 'simplejson'],
-    long_description=read('README.txt'),
-    package_data = {'package' : files },
+    packages=["pyscrap"],
+    install_requires = ["lxml", "simplejson"],
+    long_description=read("README.txt"),
+    package_data = {"package": files},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Topic :: Software Development",

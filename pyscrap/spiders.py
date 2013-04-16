@@ -12,17 +12,20 @@
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #See the License for the specific language governing permissions and
 #limitations under the License.
-import sys, socket, urllib2, os
+import sys
+import socket
+import urllib2
+import os
 import simplejson as json
 from lxml import html, etree
 from item import Item
 from item import ItemList
-from item import customSaveItem
+#from item import customSaveItem
 from settings import getHeaders
 import inspect
 
 reload(sys)
-sys.setdefaultencoding('utf-8')
+sys.setdefaultencoding("utf-8")
 
 
 def getHtml(url):
@@ -43,9 +46,9 @@ def getWeb(url, isFeed):
     loadedWeb = urllib2.build_opener()
     loadedWeb.addheaders = getHeaders()
     if isFeed:
-        web=etree.parse(  loadedWeb.open(url)  )
+        web = etree.parse(loadedWeb.open(url))
     else:
-        web=html.parse(  loadedWeb.open(url)  )
+        web = html.parse(loadedWeb.open(url))
     return web
 
 
@@ -87,7 +90,7 @@ def processItemList(itemlist, theArgs, theSpider):
     if theSpider is None:
         aSpider = theArgs[0]
     else:
-        aSpider=theSpider
+        aSpider = theSpider
     if aSpider.__pipes__ is not None:
         saveFunction = aSpider.__pipes__["itemLists"].get(itemlist.__class__.__name__)
         if saveFunction is not None:
@@ -108,7 +111,7 @@ def catchItem(f, theSpider=None):
         #print("thepath "+os.getcwd())
         #print("the spider")
         #print(str(theSpider))
-        items=f(*args, **kwargs)
+        items = f(*args, **kwargs)
         if items is None:
             return items
         if isinstance(items, Item):
@@ -124,38 +127,39 @@ def catchItem(f, theSpider=None):
                     elif isinstance(item, Item):
                         processItem(item, args, theSpider)
                     elif isinstance(item, str):
-                        aSpider=args[0]
+                        aSpider = args[0]
                         aSpider.parse(url=item)
         return items
     return new_f
 
+
 class metaSpider(type):
-    
+
     #def __init__(cls, name, bases, dct):
     #    print("__init__ "+name)
     #    super(metaSpider, cls).__init__(name, bases, dct)
-    
+
     def __new__(meta, classname, bases, classDict):
         """Metaclase captura return desde función parse crea un diccionario
         '__pipes__' según lo especificado en settings.py. También asigna el decorador
         catchitem a la función 'parse'."""
         if classname == "spider":
             return type.__new__(meta, classname, bases, classDict)
-        nosettings=False
-        nopipelines=False
+        nosettings = False
+        nopipelines = False
         try:
             settings = __import__('settings', os.getcwd())
             #print("Using local settings.")
         except Exception, e:
             try:
                 #import settings
-                spiderpath=inspect.getfile(classDict['parse'])
-                modulo=spiderpath.split("/")[-2]
-                theimport="from "+modulo+" import settings"
+                spiderpath = inspect.getfile(classDict['parse'])
+                modulo = spiderpath.split("/")[-2]
+                theimport = "from "+modulo+" import settings"
                 exec theimport
             except Exception, e:
                 #print("settings.py not found, ignoring")
-                nosettings=True
+                nosettings = True
         try:
             pipeline = __import__('pipeline', os.getcwd())
             #print("Using local pipeline.")
@@ -163,62 +167,69 @@ class metaSpider(type):
             #import pipeline
             #print(e)
             try:
-                spiderpath=inspect.getfile(classDict['parse'])
+                spiderpath = inspect.getfile(classDict['parse'])
                 print(spiderpath)
-                modulo=spiderpath.split("/")[-2]
-                theimport="from "+modulo+" import pipeline"
+                modulo = spiderpath.split("/")[-2]
+                theimport = "from "+modulo+" import pipeline"
                 exec theimport
             except Exception, e:
                 #print(e)
                 #print("pipeline.py not found, ignoring")
-                nopipelines=True
-        getUrls=None
+                nopipelines = True
+        getUrls = None
         if not nopipelines:
-            getUrls=getattr(pipeline, "getUrls", None)
+            getUrls = getattr(pipeline, "getUrls", None)
+            getSearchData = getattr(pipeline, "getSearchData", None)
         if getUrls is None:
-            getUrls=lambda: []
-        getUrls=rmSelf(getUrls)
-        getUrls=classmethod(getUrls)
-        classDict["getUrls"]=getUrls
+            getUrls = lambda: []
+            getSearchData = lambda: []
+        getUrls = rmSelf(getUrls)
+        getSearchData = rmSelf(getSearchData)
+        getSearchData = classmethod(getSearchData)
+        getUrls = classmethod(getUrls)
+        classDict["getUrls"] = getUrls
+        classDict["getSearchData"] = getSearchData
         if nopipelines or nosettings:
             return type.__new__(meta, classname, bases, classDict)
-        pipes=settings.getPipes()
+        pipes = settings.getPipes()
         #print(pipes)
         if pipes:
             if "items" in pipes:
                 for itemName, functionName in pipes["items"].iteritems():    
-                    pipes["items"][itemName]=getattr(pipeline, functionName, None)
+                    pipes["items"][itemName] = getattr(pipeline, functionName, None)
             else:
                 print("items not defined in settings.py!")
             if "itemLists" in pipes:
                 for itemName, functionName in pipes["itemLists"].iteritems():    
-                    pipes["itemLists"][itemName]=getattr(pipeline, functionName, None)
+                    pipes["itemLists"][itemName] = getattr(pipeline,
+                                                           functionName, None)
             else:
                 print("itemLists not defined in settings.py!")
-            classDict["__pipes__"]=pipes
+            classDict["__pipes__"] = pipes
             if "spiders" in pipes:
                 if pipes.get("spiders"):
-                    saveFunction=pipes["spiders"].get(classname)
+                    saveFunction = pipes["spiders"].get(classname)
                     if saveFunction:
                         #print("save fucntion: "+str(saveFunction))
-                        saveFunction=getattr(pipeline, saveFunction, None)
+                        saveFunction = getattr(pipeline, saveFunction, None)
                         if saveFunction:
-                            saveFunction=rmSelf(saveFunction)
-                            classDict["__saveItem__"]=saveFunction
+                            saveFunction = rmSelf(saveFunction)
+                            classDict["__saveItem__"] = saveFunction
                         else:
-                            classDict["__saveItem__"]=None
+                            classDict["__saveItem__"] = None
             else:
                 print("spiders not defined in settings.py!")
         else:
-            classDict["__pipes__"]=None
-        funcion=classDict.get("parse")
+            classDict["__pipes__"] = None
+        funcion = classDict.get("parse")
         if funcion:
-            classDict["parse"]=catchItem(funcion)
+            classDict["parse"] = catchItem(funcion)
         return type.__new__(meta, classname, bases, classDict)
+
 
 class spider(object):
     __metaclass__ = metaSpider
-    
+
     def parse(self):
         return None
 
