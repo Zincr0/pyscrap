@@ -29,19 +29,26 @@ sys.setdefaultencoding("utf-8")
 
 
 def getHtml(url):
+    """Download url and return lxml.html object"""
     return getWeb(url, False)
 
 
 def getXml(url):
+    """Download xml and return lxml.etree object"""
     return getWeb(url, True)
 
 
 def getJson(url):
+    """Download json and return simplejson object"""
     site = urllib2.urlopen(url, timeout=300)
     return json.load(site)
 
 
 def getWeb(url, isFeed):
+    """Download url and parse it with lxml.
+    If "isFeed" is True returns lxml.etree
+    else, returns lxml.html
+    """
     socket.setdefaulttimeout(300)
     loadedWeb = urllib2.build_opener()
     loadedWeb.addheaders = getHeaders()
@@ -53,6 +60,9 @@ def getWeb(url, isFeed):
 
 
 def rmSelf(f):
+    """f -> function.
+    Decorator, removes first argument from f parameters.
+    """
     def new_f(*args, **kwargs):
         newArgs = args[1:]
         result = f(*newArgs, **kwargs)
@@ -106,7 +116,7 @@ def processItemList(itemlist, theArgs, theSpider):
 
 def catchItem(f, theSpider=None):
     """Decorador, ejecuta la función parse y procesa el resultado
-    como una lista de items, ejecutando la función 'saveitem' que corresponda"""
+    como una lista de items, ejecutando la función 'saveitem' que corresponda."""
     def new_f(*args, **kwargs):
         #print("thepath "+os.getcwd())
         #print("the spider")
