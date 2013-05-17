@@ -192,6 +192,7 @@ class metaSpider(type):
             getSearchData = getattr(pipeline, "getSearchData", None)
         if getUrls is None:
             getUrls = lambda: []
+        if getSearchData is None:
             getSearchData = lambda: []
         getUrls = rmSelf(getUrls)
         getSearchData = rmSelf(getSearchData)
