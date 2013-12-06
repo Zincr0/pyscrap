@@ -23,6 +23,8 @@ from item import ItemList
 #from item import customSaveItem
 from settings import getHeaders
 import inspect
+from IPython import embed
+
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -161,6 +163,9 @@ class metaSpider(type):
             settings = __import__('settings', os.getcwd())
             #print("Using local settings.")
         except Exception, e:
+            if str(e) != "No module named settings":
+                errorOnSettings = str(type(e)) + "\n on settings.py: " + str(e)
+                raise Exception(errorOnSettings)
             try:
                 #import settings
                 spiderpath = inspect.getfile(classDict['parse'])
@@ -174,20 +179,24 @@ class metaSpider(type):
             pipeline = __import__('pipeline', os.getcwd())
             #print("Using local pipeline.")
         except Exception, e:
-            #import pipeline
-            #print(e)
+            if str(e) != "No module named pipeline":
+                errorOnPipeline = str(type(e)) + "\n on pipeline.py: " + str(e)
+                raise Exception(errorOnPipeline)
             try:
                 spiderpath = inspect.getfile(classDict['parse'])
-                print(spiderpath)
-                modulo = spiderpath.split("/")[-2]
+                #print(spiderpath)
+                spiderpath = spiderpath.split("/")
+                modulo = spiderpath[-2]
                 theimport = "from "+modulo+" import pipeline"
                 exec theimport
             except Exception, e:
                 #print(e)
-                #print("pipeline.py not found, ignoring")
                 nopipelines = True
         getUrls = None
-        if not nopipelines:
+        if nopipelines:
+            #print("pipeline.py not found")
+            pass
+        else:
             getUrls = getattr(pipeline, "getUrls", None)
             getSearchData = getattr(pipeline, "getSearchData", None)
         if getUrls is None:
