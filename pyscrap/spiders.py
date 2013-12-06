@@ -23,7 +23,7 @@ from item import ItemList
 #from item import customSaveItem
 from settings import getHeaders
 import inspect
-from IPython import embed
+#from IPython import embed
 
 
 reload(sys)
