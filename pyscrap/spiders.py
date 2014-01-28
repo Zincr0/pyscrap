@@ -193,6 +193,7 @@ class metaSpider(type):
                 #print(e)
                 nopipelines = True
         getUrls = None
+        getSearchData = None
         if nopipelines:
             #print("pipeline.py not found")
             pass
